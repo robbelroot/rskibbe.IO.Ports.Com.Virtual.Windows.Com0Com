@@ -13,11 +13,20 @@ namespace rskibbe.IO.Ports.Com0Com
             InstallationFolder = @"C:\Program Files (x86)\com0com";
         }
 
-        public static async Task<IEnumerable<string>> ListUsedPortNamesAsync()
+        /// <summary>
+        /// Creates a virtual port pair by providing the naming pattern
+        /// </summary>
+        /// <returns>A registration object containing basic registration information</returns>
+        public static async Task<ComPortRegistration> CreateVirtualPortsAsync(string pattern = "COM#")
         {
-            var processStartInfo = GetProcessStartInfo("busynames COM?*");
+            var arguments = $"install PortName={pattern} PortName={pattern}";
+            var processStartInfo = GetProcessStartInfo(arguments);
             var lines = await GetExecutableResponseAsync(processStartInfo);
-            return lines;
+            var line = lines.First();
+            var registration = ComPortRegistration.FromRegistrationLine(line);
+            var comPortPair = await GetComPortsByRegistrationIdAsync(registration.Id);
+            registration.ComPorts = comPortPair;
+            return registration;
         }
 
         /// <summary>
@@ -50,21 +59,17 @@ namespace rskibbe.IO.Ports.Com0Com
             return portARemoved && portBRemoved;
         }
 
+        public static async Task<IEnumerable<string>> ListUsedPortNamesAsync(string pattern = "COM?*")
+        {
+            var processStartInfo = GetProcessStartInfo($"busynames {pattern}");
+            var lines = await GetExecutableResponseAsync(processStartInfo);
+            return lines;
+        }
+
         public static async Task RemoveAllVirtualPortsAsync()
         {
             var processStartInfo = GetProcessStartInfo($"--silent uninstall");
             await GetExecutableResponseAsync(processStartInfo);
-        }
-
-        public static async Task<ComPortRegistration> CreateVirtualPortsAsync()
-        {
-            var processStartInfo = GetProcessStartInfo("install PortName=COM# PortName=COM#");
-            var lines = await GetExecutableResponseAsync(processStartInfo);
-            var line = lines.First();
-            var registration = ComPortRegistration.FromRegistrationLine(line);
-            var comPortPair = await GetComPortsByRegistrationIdAsync(registration.Id);
-            registration.ComPorts = comPortPair;
-            return registration;
         }
 
         /// <summary>
@@ -88,19 +93,6 @@ namespace rskibbe.IO.Ports.Com0Com
                 }
             }
             return comPortPair;
-        }
-
-        /// <summary>
-        /// Turns the following example line
-        /// CNCA0 FriendlyName="com0com - serial port emulator (COM7)"
-        /// into -> COM7
-        /// </summary>
-        public static string GetComPortNameByFriendlyNameLine(string line)
-        {
-            var values = line.Split("(");
-            var last = values.LastOrDefault();
-            last = last.Replace(")", "");
-            return last;
         }
 
         /// <summary>
@@ -148,6 +140,20 @@ namespace rskibbe.IO.Ports.Com0Com
             return list;
         }
 
+
+        /// <summary>
+        /// Turns the following example line
+        /// CNCA0 FriendlyName="com0com - serial port emulator (COM7)"
+        /// into -> COM7
+        /// </summary>
+        public static string GetComPortNameByFriendlyNameLine(string line)
+        {
+            var values = line.Split("(");
+            var last = values.LastOrDefault();
+            last = last.Replace(")", "");
+            return last;
+        }
+
         /// <summary>
         /// Helps creating the fitting <see cref="ProcessStartInfo"/> instance
         /// </summary>
@@ -181,6 +187,13 @@ namespace rskibbe.IO.Ports.Com0Com
                 line = line.Trim();
                 response.Add(line);
             }
+            return response;
+        }
+
+        public static async Task<IEnumerable<string>> GetExecutableResponseAsync(string arguments)
+        {
+            var processStartInfo = GetProcessStartInfo(arguments);
+            var response = await GetExecutableResponseAsync(processStartInfo);
             return response;
         }
 
