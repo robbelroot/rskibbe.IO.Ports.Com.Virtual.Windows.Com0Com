@@ -17,7 +17,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\rskibbe.IO.Ports.Com0Com\rskibbe.IO.Ports.Com0Com.csproj" />
+    <ProjectReference Include="..\rskibbe.IO.Ports.Com.Com0Com\rskibbe.IO.Ports.Com.Com0Com.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="rskibbe.IO.Ports.Com">
+      <HintPath>..\..\rskibbe.IO.Ports.Com\rskibbe.IO.Ports.Com\bin\Debug\net6.0\rskibbe.IO.Ports.Com.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

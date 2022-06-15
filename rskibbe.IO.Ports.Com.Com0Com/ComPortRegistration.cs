@@ -1,6 +1,6 @@
-﻿namespace rskibbe.IO.Ports.Com0Com
+﻿namespace rskibbe.IO.Ports.Com.Com0Com
 {
-    public class ComPortRegistration
+    public class ComPortRegistration : ComPortRegistrationBase
     {
 
         public int Id { get; set; }
@@ -8,8 +8,6 @@
         public string IdentifierA => $"CNCA{Id}";
 
         public string IdentifierB => $"CNCB{Id}";
-
-        public ComPortPair ComPorts { get; set; }
 
         public ComPortRegistration()
         {
@@ -21,13 +19,12 @@
             Id = id;
         }
 
-        public static ComPortRegistration FromRegistrationLine(string line)
+        public static ComPortRegistration FromBinaryResponse(IEnumerable<string> lines)
         {
+            var line = lines.First();
             var lineValues = line.Split(" ");
             var firstPart = lineValues[0];
-            var digits = firstPart.Where(x => Char.IsDigit(x));
-            var digitString = string.Join("", digits);
-            var id = Convert.ToInt32(digitString);
+            firstPart.ExtractInt(out var id);
             var registration = new ComPortRegistration(id);
             return registration;
         }
