@@ -1,6 +1,6 @@
 namespace rskibbe.IO.Ports.Com.Com0Com.Tests
 {
-    public class Com0ComTests
+    public class CocTests
     {
         protected Coc Com0Com;
 
