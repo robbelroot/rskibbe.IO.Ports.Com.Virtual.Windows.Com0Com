@@ -4,9 +4,9 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	<PackageId>rskibbe.IO.Ports.Com.Com0Com</PackageId>
+	<PackageId>rskibbe.IO.Ports.Com.Virtual.Windows.Com0Com</PackageId>
 	<description>A .NET wrapper package for the com0com null modem emulator binary. It helps creating, removing and listing virtual ports by using the com0com console app.</description>
-	<Version>1.0.2</Version>
+	<Version>1.0.3</Version>
 	<Authors>Robert Skibbe</Authors>
 	<Company>Robert Skibbe</Company>
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="rskibbe.IO.Ports.Com" Version="1.0.0" />
+    <PackageReference Include="rskibbe.IO.Ports.Com" Version="1.0.4" />
   </ItemGroup>
 
 </Project>

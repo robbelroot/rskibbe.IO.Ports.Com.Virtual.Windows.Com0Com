@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\rskibbe.IO.Ports.Com.Com0Com\rskibbe.IO.Ports.Com.Com0Com.csproj" />
+    <ProjectReference Include="..\rskibbe.IO.Ports.Com.Virtual.Windows.Com0Com\rskibbe.IO.Ports.Com.Virtual.Windows.Com0Com.csproj" />
   </ItemGroup>
 
   <ItemGroup>
